@@ -1,4 +1,4 @@
-var Project = {
+const Project = {
   init: function() {
     loaded = true;
     Scrolling.top();
@@ -8,7 +8,7 @@ var Project = {
   build: function() {
     Buttons.init();
     Parallax.init();
-    Inputs.init();
+    // Inputs.init();
     // Slider.init();
     // Newsletter.init();
     Header.init();
@@ -17,6 +17,7 @@ var Project = {
   }
 };
 
-$(function(){
+
+document.addEventListener('DOMContentLoaded', () => {
   Project.init();
 });

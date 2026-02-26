@@ -1,22 +1,27 @@
-var Inputs = {
-  init: function () {
-    Inputs.build();
+const Inputs = {
+  
+  init() {
+    this.build();
   },
-  build: function () {
-    Inputs.field();
+
+  build() {
+    this.field();
   },
-  field: function () {
-    $("input, textarea").each(function () {
-      var $this = $(this);
-      var $parent = $this.parents(".input");
+
+  field() {
+    $$('input, textarea').forEach(el => {
+      const $this = $(el);
+      const $parent = $(el.closest('.input'));
 
       $this
-        .on("focusin", function () {
-          $parent.addClass("active");
+        .on('focusin', () => {
+          $parent.addClass('active');
         })
-        .on("focusout", function () {
-          if ($this.val() == "") $parent.removeClass("active");
+        .on('focusout', () => {
+          if (el.value === '') {
+            $parent.removeClass('active');
+          }
         });
     });
-  },
+  }
 };

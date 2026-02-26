@@ -14,9 +14,7 @@ $gaps: (
 .gap {
   $self: &;
 
-  &-hh {
-    padding-top: var(--hh, 70px);
-  }
+  &-hh { padding-top: var(--hh, 70px); }
 
   @each $name, $gap in $gaps {
     &-y--#{$name} {

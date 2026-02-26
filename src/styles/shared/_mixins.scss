@@ -1,16 +1,14 @@
 @use "variables" as *;
 
-@mixin font($fname, $ffile, $fweight, $fstyle) {
+@mixin font($font-name, $font-file, $font-weight, $font-style) {
   @font-face {
-    font-family: "#{$fname}";
-    font-weight: $fweight;
-    font-style: $fstyle;
+    font-family: "#{$font-name}";
+    font-weight: $font-weight;
+    font-style: $font-style;
     font-display: swap;
-    unicode-range: U+?????;
     src: 
-      local("#{$fname}"),
-      url("fonts/#{$ffile}.woff") format("woff"),
-      url("fonts/#{$ffile}.woff2") format("woff2");
+      url("#{$font-file}.woff2") format("woff2"),
+      url("#{$font-file}.woff") format("woff");
   }
 }
 

@@ -7,13 +7,9 @@ const theme = `./public/wp-content/themes/${pkg.name}-theme/`;
 const nm = "./node_modules/";
 
 const lib = [
-  nm + "jquery/dist/jquery.min.js",
-  nm + "js-cookie/dist/js.cookie.min.js",
   nm + "vanilla-lazyload/dist/lazyload.min.js",
   nm + "gsap/dist/gsap.min.js",
   nm + "gsap/dist/ScrollTrigger.min.js",
-  nm + "gsap/dist/ScrollToPlugin.min.js",
-  nm + "ajaxchimp/jquery.ajaxchimp.min.js",
   nm + "swiper/swiper-bundle.min.js",
 ];
 

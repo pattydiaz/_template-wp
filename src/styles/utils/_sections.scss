@@ -1,15 +1,72 @@
 @use "../shared" as *;
 
+$section-sizes: (
+  100: (svh: 100, min: 567, min-md: 760),
+   75: (svh: 75,  min: 550, min-md: 700),
+   50: (svh: 50,  min: 400, min-md: 600),
+);
+
+@mixin section-size($svh, $min, $min-md, $self) {
+  height: calc(#{$svh}svh - var(--ah, 0px));
+  min-height: #{$min}px;
+
+  @include bp-up(md) {
+    min-height: #{$min-md}px;
+  }
+
+  &:not(.section) {
+    position: relative;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .container {
+    height: 100%;
+    width: 100%;
+  }
+
+  .bg-cover,
+  .bg-inline,
+  div[class*="-text"] {
+    min-height: #{$min}px;
+
+    @include bp-up(md) {
+      min-height: #{$min-md}px;
+    }
+  }
+
+  div[class*="-wrapper"] {
+    @extend #{$self}-#{$svh};
+  }
+
+  div[class*="-fixed"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: #{$svh}svh;
+    min-height: calc(#{$min}px + var(--ah, 0px));
+
+    @include bp-up(md) {
+      min-height: calc(#{$min-md}px + var(--ah, 0px));
+    }
+  }
+}
+
+/*! purgecss start ignore */
+
 .section {
-	$self: &;
-	position: relative;
+  $self: &;
+
+  position: relative;
   width: 100%;
-  
+  z-index: 1;
+
   div[class*="-text"] {
     position: relative;
     height: 100%;
     width: 100%;
-		z-index: 1;
+    z-index: 1;
     display: flex;
     flex-direction: column;
 
@@ -21,137 +78,17 @@
     &.top { justify-content: flex-start; }
     &.bottom { justify-content: flex-end; }
   }
-  
-  &-100 {
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
-		min-height: 667px;
 
-    @include bp-down(sm) {
-      height: calc(100vh + var(--hh));
-      height: calc((var(--vh, 1vh) * 100) + var(--hh));
-    }
-    
-		@include bp-up(md) {
-      min-height: 760px;
-		}
-
-    .container {
-      height: 100%;
-      width: 100%;
-    }
-    
-    .bg-cover,
-    .bg-inline {
-      min-height: 667px;
-
-      @include bp-up(md) {
-        min-height: 760px;
-      }
-    }
-
-    div[class*="-text"] {
-      min-height: 667px;
-
-      @include bp-up(md) {
-        min-height: 760px;
-      }
-    }
-
-    div[class*="-wrapper"] {
-      @extend #{$self}-100;
-    }
-	}
-  
-  &-75 {
-    height: 75vh;
-    height: calc(var(--vh, 1vh) * 75);
-		min-height: 650px;
-    
-		@include bp-up(md) {
-      min-height: 700px;
-		}
-
-    .container {
-      height: 100%;
-      width: 100%;
-    }
-    
-    .bg-cover,
-    .bg-inline {
-      min-height: 650px;
-
-      @include bp-up(md) {
-        min-height: 700px;
-      }
-    }
-
-    div[class*="-text"] {
-      min-height: 650px;
-
-      @include bp-up(md) {
-        min-height: 700px;
-      }
-    }
-
-    div[class*="-wrapper"] {
-      @extend #{$self}-75;
-    }
-	}
-  
-  &-50 {
-    height: 50vh;
-    height: calc(var(--vh, 1vh) * 50);
-		min-height: 500px;
-    
-		@include bp-up(md) {
-      min-height: 600px;
-		}
-
-    .container {
-      height: 100%;
-      width: 100%;
-    }
-    
-    .bg-cover,
-    .bg-inline {
-      min-height: 500px;
-
-      @include bp-up(md) {
-        min-height: 600px;
-      }
-    }
-
-    div[class*="-text"] {
-      min-height: 500px;
-
-      @include bp-up(md) {
-        min-height: 600px;
-      }
-    }
-
-    div[class*="-wrapper"] {
-      @extend #{$self}-50;
-    }
-	}
-
-  &-inset {
-    padding: $spacing*1.5;
-
-    @include bp-up(md) { padding: $spacing*3; }
-    @include bp-up(xl) { padding: $spacing*5; }
-
-    .bg-cover,
-    .bg-inline {
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    div[class*="-wrapper"] {
-      position: relative;
-      height: 100%;
-      width: 100%;
+  @each $key, $data in $section-sizes {
+    &-#{$key} {
+      @include section-size(
+        map-get($data, svh),
+        map-get($data, min),
+        map-get($data, min-md),
+        $self
+      );
     }
   }
-
 }
+
+/*! purgecss end ignore */

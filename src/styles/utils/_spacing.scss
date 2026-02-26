@@ -1,5 +1,7 @@
 @use "../shared" as *;
 
+/*! purgecss start ignore */
+
 @mixin spacing() {
   @each $prop, $abbrev in (margin: m, padding: p) {
     @each $size, $lengths in $spacers {
@@ -88,3 +90,5 @@
   &-upt { @include bp-up(md) { padding: var(--padding-upt); }}
   &-upd { @include bp-up(lg) { padding: var(--padding-upd); }}
 }
+
+/*! purgecss end ignore */

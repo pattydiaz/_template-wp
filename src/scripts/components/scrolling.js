@@ -1,84 +1,105 @@
-var Scrolling = {
-  init: function() {
-    Scrolling.build();
+const Scrolling = {
+  
+  init() {
+    this.build();
   },
-  build: function() {
-    Scrolling.animate();
-    Scrolling.hash();
-    Scrolling.fix();
+
+  build() {
+    this.animate();
+    this.hash();
+    this.fix();
   },
-  animate: function() {
-    var $animated = $('.animated');
 
-    $animated.each(function() {
-      var $this = $(this);
-      var delay = parseInt($this.data('delay')) || 0;
-      var offset = $this.data('offset') || 0;
-      var isReverse = $this.hasClass('animated-reverse');
+  scrollTo(targetEl, duration = 1) {
+    if (!targetEl) return;
 
-      var enterTimeout, leaveTimeout;
+    const startY = window.scrollY;
+    const endY = targetEl.getBoundingClientRect().top + window.scrollY;
+
+    gsap.to({ y: startY }, {
+      y: endY,
+      duration,
+      ease: 'power1.inOut',
+      onUpdate() {
+        window.scrollTo(0, this.targets()[0].y);
+      }
+    });
+  },
+
+  animate() {
+    $$('.animated').forEach(el => {
+      const $el = $(el);
+
+      const delay = parseInt($el.attr('data-delay')) || 0;
+      const offset = $el.attr('data-offset') || 0;
+      const isReverse = el.classList.contains('animated-reverse');
+      const height = el.offsetHeight;
+
+      let enterTimeout, leaveTimeout;
 
       ScrollTrigger.create({
-        trigger: $this[0],
+        trigger: el,
         start: `${offset} 60%`,
-        end: `+=${$this.outerHeight()}`,
+        end: `+=${height}`,
+
         onEnter: () => {
           enterTimeout = setTimeout(() => {
-            $this.addClass(isReverse ? 'active-reverse' : 'active');
+            $el.addClass(isReverse ? 'active-reverse' : 'active');
           }, delay);
         },
+
         onLeaveBack: () => {
           if (isReverse) {
             if (enterTimeout) clearTimeout(enterTimeout);
             leaveTimeout = setTimeout(() => {
-              $this.removeClass('active-reverse');
+              $el.removeClass('active-reverse');
             }, delay);
           }
         }
       });
     });
   },
-  hash: function () {
+
+  hash() {
     const anchor = window.location.hash;
     if (!anchor) return;
 
-    const target = document.querySelector(anchor);
-    if (!target) return;
-
-    const yPosition = target.offsetTop;
-
-    gsap.to(window, {
-      scrollTo: { y: yPosition },
-      duration: 1,
-      ease: 'power1.inOut'
-    });
-  },
-  lock: function(delay) {
-    $('html, body').css('overflow', 'hidden');
-  },
-  unlock: function() {
-    $('html, body').css('overflow', '');
-  },
-  top: function() {
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    
-    $(window).on('load', function () {
-      window.scrollTo(0, 0);
-    });
-  },
-  fix: function() {
-    if (!navigator.userAgent.match(/(Android)/)) {
-      $('body *').each(function() {
-        const $el = $(this);
-        const overflow = $el.css('overflow');
-        const overflowX = $el.css('overflow-x');
-        const overflowY = $el.css('overflow-y');
-
-        if (/(scroll|overlay)/.test(overflow + overflowX + overflowY)) {
-          $el.css("-webkit-overflow-scrolling", "touch !important");
-        }
+    const $target = $(anchor);
+    if ($target.el) {
+      requestAnimationFrame(() => {
+        this.scrollTo($target.el, 1);
       });
-
     }
+  },
+
+  lock() {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  },
+
+  unlock() {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  },
+
+  top() {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0)
+      ScrollTrigger.refresh(true);
+    });
+  },
+
+  fix() {
+    if (/Android/.test(navigator.userAgent)) return;
+
+    $$('[style*="overflow"], [style*="scroll"], [style*="overlay"]').forEach(el => {
+      const style = getComputedStyle(el);
+      const overflow = style.overflow + style.overflowX + style.overflowY;
+
+      if (/(scroll|overlay)/.test(overflow)) {
+        el.style.webkitOverflowScrolling = 'touch';
+      }
+    });
   }
 };

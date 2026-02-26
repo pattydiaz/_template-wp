@@ -2,33 +2,39 @@
 @use "../shared" as *;
 
 $border-sides: (
-  null: "",
-  top: "top",
-  bottom: "bottom",
-  left: "left",
-  right: "right",
-  y: ("top", "bottom"),
-  x: ("left", "right")
+  null: null,
+  top: top,
+  bottom: bottom,
+  left: left,
+  right: right,
+  y: (top, bottom),
+  x: (left, right)
 );
 
 @each $name, $color in $colors {
   @each $key, $value in $border-sides {
-    $class: if($key == null, ".border-#{$name}", ".border-#{$key}-#{$name}");
 
-    #{$class} {
+    // Build class name safely
+    $class-name: "border";
+
+    @if $key != null {
+      $class-name: "#{$class-name}-#{$key}";
+    }
+
+    $class-name: "#{$class-name}-#{$name}";
+
+    .#{$class-name} {
+
       @if meta.type-of($value) == "list" {
         @each $side in $value {
           border-#{$side}: var(--border-width, 1px) solid #{$color};
         }
-      }
-
-      @else if $value != "" {
+      } @else if $value != null {
         border-#{$value}: var(--border-width, 1px) solid #{$color};
-      }
-       
-      @else {
+      } @else {
         border: var(--border-width, 1px) solid #{$color};
       }
+
     }
   }
 }
@@ -40,9 +46,14 @@ $radius-sizes: (
 );
 
 @each $mod, $radius in $radius-sizes {
-  $prefix: if($mod == null, "", "-#{$mod}");
 
-  .border-radius#{$prefix} {
+  $class-name: "border-radius";
+
+  @if $mod != null {
+    $class-name: "#{$class-name}-#{$mod}";
+  }
+
+  .#{$class-name} {
     border-radius: $radius;
 
     &-top {

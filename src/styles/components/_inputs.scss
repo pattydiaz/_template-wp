@@ -18,6 +18,10 @@
     @include input-select;
   }
 
+  &-checkbox {
+    @include input-checkbox;
+  }
+
   &-alert {
 
     &.error {

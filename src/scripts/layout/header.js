@@ -1,51 +1,62 @@
-var header = $("#header");
-var header_anim;
-var header_height;
+let header_anim;
+let header_height;
 
-var Header = {
-  init: function () {
-    Header.build();
+const Header = {
+  
+  init() {
+    this.build();
   },
-  build: function () {
-    if (header.is(":visible")) {
-      Header.height();
-      Header.scroll();
+
+  build() {
+    if (header.isVisible()) {
+      this.height();
+      this.scroll();
     }
   },
-  height: function () {
-    header_height = header.outerHeight();
-    body.get(0).style.setProperty("--hh", `${header_height}px`);
+
+  height() {
+    header_height = header.el.offsetHeight;
+    body.el.style.setProperty("--hh", `${header_height}px`);
 
     w.on("resize", () => {
-      header_height = header.outerHeight();
-      body.get(0).style.setProperty("--hh", `${header_height}px`);
+      header_height = header.el.offsetHeight;
+      body.el.style.setProperty("--hh", `${header_height}px`);
     });
   },
-  scroll: function () {
+
+  scroll() {
     header_anim = gsap.timeline({
       paused: true,
       scrollTrigger: {
-        trigger: body,
-        start: '0 0',
-        end: '100% 0',
-        onUpdate: (self) => {
-          const scroll_condition = self.scroll() > header_height && self.direction == 1;
-          const reverse_condition = self.direction == -1 || body.hasClass('sidecart-active');
+        trigger: body.el,
+        start: "200px 0",
+        end: "100% 0",
+        // markers: true,
 
-          header.toggleClass("header--scroll", self.progress > 0.001);
+        onUpdate: self => {
+          const scrolledPastHeader = self.scroll() > header_height;
+          const scrollingDown = scrolledPastHeader && self.direction === 1;
+          const scrollingUp = self.direction === -1;
 
-          if (scroll_condition && !body.hasClass("nav-active") && !body.hasClass('sidecart-active')) 
-            header_anim.play();
+          const navActive = body.el.classList.contains("nav-active");
 
-          if (reverse_condition) header_anim.reverse();
+          if (self.progress > 0.0001) {
+            header.el.classList.add("header--scroll");
+          } else {
+            header.el.classList.remove("header--scroll");
+          }
+
+          if (scrollingDown && !navActive) { header_anim.play(); }
+          if (scrollingUp) { header_anim.reverse(); }
         }
-      },
+      }
     });
 
-    header_anim.to(header, {
-      y: '-200%',
+    header_anim.to(header.el, {
+      y: "-150%",
       duration: 0.4,
-      ease: 'power2.inOut'
+      ease: "power2.inOut"
     });
-  }
+  },
+
 };

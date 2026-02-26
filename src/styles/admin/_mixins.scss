@@ -44,17 +44,17 @@
 }
 
 @mixin wp-text-decoration {
-  @include text-decoration($important: !important, $wp: true);
+  @include text-decoration($important: !important, $util: true);
 }
 
 @mixin wp-btn-primary {
   @include wp-btn-reset;
-  // @include btn-primary($important: !important, $wp: true);
+  // @include btn-primary($important: !important, $util: true);
 }
 
 @mixin wp-btn-secondary {
   @include wp-btn-reset;
-  // @include btn-secondary($important: !important, $wp: true);
+  // @include btn-secondary($important: !important, $util: true);
 }
 
 @mixin wp-logo {
